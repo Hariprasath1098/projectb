@@ -5,20 +5,22 @@ const LockPage = ({ onUnlock }) => {
   const [error, setError] = useState("");
   const [unlocking, setUnlocking] = useState(false);
 
-  const correctPassword = "hari123";
-
   const handleUnlock = () => {
-    if (password === correctPassword) {
-      setError("");
-      setUnlocking(true);
+  if (!password) {
+    setError("Enter the secret 😅");
+    return;
+  }
 
-      setTimeout(() => {
-        onUnlock();
-      }, 1200);
-    } else {
-      setError("Wrong secret 😅");
-    }
-  };
+  const success = onUnlock(password);
+
+  if (!success) {
+    setError("Wrong secret 😅");
+    return;
+  }
+
+  setError("");
+  setUnlocking(true);
+};
 
   return (
     <div className="relative min-h-[100dvh] w-full flex items-center justify-center overflow-hidden">
@@ -58,77 +60,37 @@ const LockPage = ({ onUnlock }) => {
       {/* CENTER CONTENT */}
       <div className="relative z-30 flex flex-col items-center gap-6 text-center">
 
-        {/* Title */}
-        <p className="
-          text-amber-900 font-serif italic text-xl
-          bg-amber-100/70 px-5 py-2
-          rounded-md shadow-sm
-        ">
+        <p className="text-amber-900 font-serif italic text-xl bg-amber-100/70 px-5 py-2 rounded-md shadow-sm">
           Enter your secret
         </p>
 
-        {/* Story text */}
         <p className="text-amber-800/70 italic text-sm">
           The diary listens only to its keeper...
         </p>
 
-        {/* Glow Input */}
         <div className="relative flex justify-center">
-
-          <div className="
-            absolute w-48 h-12
-            bg-yellow-200/30
-            blur-xl rounded-full
-            animate-pulse
-          "></div>
+          <div className="absolute w-48 h-12 bg-yellow-200/30 blur-xl rounded-full animate-pulse"></div>
 
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="••••••"
-            className="
-              relative bg-transparent
-              border-b-2 border-amber-900
-              text-center outline-none
-              text-amber-900 text-lg
-              w-56 pb-2 font-serif
-            "
+            className="relative bg-transparent border-b-2 border-amber-900 text-center outline-none text-amber-900 text-lg w-56 pb-2 font-serif"
           />
         </div>
 
-        {/* Error */}
         {error && (
           <p className="text-red-700 text-sm">{error}</p>
         )}
 
-        {/* ✨ ENCHANTED PARCHMENT BUTTON */}
         <button
           onClick={handleUnlock}
-          className="
-            mt-4 px-8 py-3
-            bg-gradient-to-b from-amber-200 to-amber-400
-            text-amber-900
-            font-serif text-lg
-            rounded-md
-            border border-amber-700
-            shadow-md shadow-amber-900/30
-            hover:scale-105
-            hover:shadow-lg hover:shadow-amber-700/40
-            active:scale-95
-            transition-all duration-300
-            relative overflow-hidden
-          "
+          className="mt-4 px-8 py-3 bg-gradient-to-b from-amber-200 to-amber-400 text-amber-900 font-serif text-lg rounded-md border border-amber-700 shadow-md shadow-amber-900/30 hover:scale-105 hover:shadow-lg hover:shadow-amber-700/40 active:scale-95 transition-all duration-300 relative overflow-hidden"
         >
           Open Diary
 
-          {/* shimmer overlay */}
-          <span className="
-            absolute inset-0
-            bg-white/20
-            opacity-0 hover:opacity-100
-            transition-opacity
-          "></span>
+          <span className="absolute inset-0 bg-white/20 opacity-0 hover:opacity-100 transition-opacity"></span>
         </button>
 
       </div>
