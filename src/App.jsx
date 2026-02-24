@@ -56,29 +56,28 @@ export default function App() {
         <div className="absolute inset-0 bg-yellow-100 animate-ping z-50"></div>
       )}
 
-      {/* --- SCENE 1: INTRO --- */}
       {step === "intro" && (
-        <div
-          className="flex justify-center items-center h-full bg-black"
-          onDoubleClick={handleIntroEnd} // 💻 Desktop double click
-          onTouchEnd={() => {
-            const now = Date.now();
-            if (now - lastTapRef.current < 300) {
-              handleIntroEnd(); // 📱 Mobile double tap
-            }
-            lastTapRef.current = now;
-          }}
-        >
-          <video
-            src={introVideo}
-            autoPlay
-            muted
-            playsInline
-            onEnded={handleIntroEnd} // 🎬 When video finishes
-            className="w-72 rounded-lg shadow-2xl"
-          />
-        </div>
-      )}
+  <div
+    className="fixed inset-0 flex items-center justify-center bg-black"
+    onDoubleClick={handleIntroEnd}
+    onTouchEnd={() => {
+      const now = Date.now();
+      if (now - lastTapRef.current < 300) {
+        handleIntroEnd();
+      }
+      lastTapRef.current = now;
+    }}
+  >
+    <video
+      src={introVideo}
+      autoPlay
+      muted
+      playsInline
+      onEnded={handleIntroEnd}
+      className="w-72 rounded-lg shadow-2xl"
+    />
+  </div>
+)}
 
       {/* --- SCENE 2: LOCK --- */}
       {step === "lock" && (
