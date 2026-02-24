@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* 🌸 Slow Floating Animation */
+@keyframes floatSlow {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float-slow {
+  animation: floatSlow 8s ease-in-out infinite;
+}
+
+/* ✨ Slight Variation */
+.animate-float-slower {
+  animation: floatSlow 12s ease-in-out infinite;
+}
+
+.animate-float-fast {
+  animation: floatSlow 5s ease-in-out infinite;
+}
+
+
+/* 💫 Smooth Fade In */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.8s ease forwards;
+}
+
+
+
+/* 🩺 Medical Doodle Background Layer */
+
+.home-bg {
+  position: relative;
+  min-height: 100vh;
+  background: linear-gradient(
+    135deg,
+    #e9d5f5,
+    #f3e8ff
+  );
+  overflow: hidden;
+}
+
+/* Faint doodle overlay */
+.home-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background-image: url("/medical-doodle.png");
+  background-repeat: repeat;
+  background-size: 420px;
+
+  opacity: 0.03; /* keep very faint */
+  mix-blend-mode: soft-light;
+
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Ensure content appears above doodle */
+.home-bg > * {
+  position: relative;
+  z-index: 1;
+}
