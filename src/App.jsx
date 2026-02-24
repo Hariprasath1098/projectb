@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import introVideo from "./assets/introVideo.mp4";
 import LockPage from "./LockPage";
@@ -17,41 +17,39 @@ import Letters from "./sections/Letters";
 export default function App() {
   const [step, setStep] = useState("intro");
   const [fade, setFade] = useState(false);
+  const lastTapRef = useRef(0);
 
-  // 🔐 Check if already unlocked (with version match)
-  useEffect(() => {
+  // 🎬 Handle Intro End (normal or skipped)
+  const handleIntroEnd = () => {
     const savedVersion = localStorage.getItem("unlockVersion");
 
     if (savedVersion === PASSWORD_VERSION) {
       setStep("main");
     } else {
-      const timer = setTimeout(() => {
-        setStep("lock");
-      }, 5000);
-
-      return () => clearTimeout(timer);
+      setStep("lock");
     }
-  }, []);
+  };
 
+  // 🔐 Handle Unlock
   const handleUnlock = (enteredPassword) => {
-  if (enteredPassword === PASSWORD) {
-    localStorage.setItem("unlockVersion", PASSWORD_VERSION);
+    if (enteredPassword === PASSWORD) {
+      localStorage.setItem("unlockVersion", PASSWORD_VERSION);
 
-    setFade(true);
+      setFade(true);
 
-    setTimeout(() => {
-      setStep("main");
-      setFade(false);
-    }, 1200);
+      setTimeout(() => {
+        setStep("main");
+        setFade(false);
+      }, 1200);
 
-    return true;   // ✅ success
-  }
+      return true;
+    }
 
-  return false;    // ❌ wrong password
-};
+    return false;
+  };
 
   return (
-    <div className="w-full h-screen ...">
+   <div className="w-full min-h-screen relative">
 
       {/* ✨ Magic Fade Overlay */}
       {fade && (
@@ -60,12 +58,23 @@ export default function App() {
 
       {/* --- SCENE 1: INTRO --- */}
       {step === "intro" && (
-        <div className="flex justify-center items-center h-full">
+        <div
+          className="flex justify-center items-center h-full bg-black"
+          onDoubleClick={handleIntroEnd} // 💻 Desktop double click
+          onTouchEnd={() => {
+            const now = Date.now();
+            if (now - lastTapRef.current < 300) {
+              handleIntroEnd(); // 📱 Mobile double tap
+            }
+            lastTapRef.current = now;
+          }}
+        >
           <video
             src={introVideo}
             autoPlay
             muted
             playsInline
+            onEnded={handleIntroEnd} // 🎬 When video finishes
             className="w-72 rounded-lg shadow-2xl"
           />
         </div>
@@ -76,7 +85,7 @@ export default function App() {
         <LockPage onUnlock={handleUnlock} />
       )}
 
-      {/* --- SCENE 3: MAIN APP WITH ROUTES --- */}
+      {/* --- SCENE 3: MAIN APP --- */}
       {step === "main" && (
         <BrowserRouter>
           <Routes>
