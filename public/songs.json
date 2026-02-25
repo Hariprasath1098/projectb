@@ -1,0 +1,67 @@
+[
+  {
+    "artist": "Pradeep",
+    "songs": [
+      {
+        "id": 1,
+        "title": "Agasatha",
+        "file": "Agasatha.mp3",
+        "cover": "Agasatha.jpg"
+      },
+      {
+        "id": 2,
+        "title": "Enna Naan Seiven",
+        "file": "Enna Naan Seiven.mp3",
+        "cover": "EnnaNaanSeiven.jpg"
+      },
+      {
+        "id": 3,
+        "title": "Idhayam Love Megamo Aval",
+        "file": "Idhayam_Love_Megamo_Aval.mp3",
+        "cover": "Idhayam.jpg"
+      },
+      {
+        "id": 4,
+        "title": "Kannamma",
+        "file": "Kannamma.mp3",
+        "cover": "Kannamma.jpg"
+      },
+      {
+        "id": 5,
+        "title": "Maya Nadhi",
+        "file": "MayaNadhi.mp3",
+        "cover": "MayaNadhi.jpg"
+      },
+      {
+        "id": 6,
+        "title": "Nee Kavithaigala",
+        "file": "NeeKavithaigala.mp3",
+        "cover": "NeeKavithaigala.jpg"
+      },
+      {
+        "id": 7,
+        "title": "Pogatha Yennavittu",
+        "file": "Pogatha_Yennavittu.mp3",
+        "cover": "Pogatha.jpg"
+      },
+      {
+        "id": 8,
+        "title": "Thaensudare",
+        "file": "Thaensudare.mp3",
+        "cover": "Thaensudare.jpg"
+      },
+      {
+        "id": 9,
+        "title": "Un Kanney Aayiram Kadha Pesudhey",
+        "file": "Un_Kanney_Aayiram_Kadha_Pesudhey.mp3",
+        "cover": "UnKanney.jpg"
+      },
+      {
+        "id": 10,
+        "title": "Varaale Panche",
+        "file": "Varaale_Panche.mp3",
+        "cover": "Varaale.jpg"
+      }
+    ]
+  }
+]
