@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Home, Film, Play, ArrowUp } from "lucide-react";
+import { Home, Film, Play } from "lucide-react";
 
 const LoadingSpinner = () => (
   <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
@@ -8,47 +8,39 @@ const LoadingSpinner = () => (
 );
 
 export default function InstagramClone() {
-  const [view, setView] = useState("feed"); 
+  const [view, setView] = useState("feed");
+  // --- Initialize state from LocalStorage ---
+  const [activeReelIndex, setActiveReelIndex] = useState(() => {
+    const saved = localStorage.getItem("lastWatchedIndex");
+    return saved ? parseInt(saved) : 0;
+  });
   const [isGlobalMuted, setIsGlobalMuted] = useState(true);
   const [loadingStates, setLoadingStates] = useState({});
-  const [showBackToTop, setShowBackToTop] = useState(false);
 
-  // --- 1. SCALABLE VIDEO SOURCE (118 Videos) ---
+  // --- Shuffle Logic: Preserves order across sessions ---
   const [reels] = useState(() => {
-    // Dynamically generate 118 video entries
-    const baseReels = Array.from({ length: 118 }, (_, i) => ({
+    const baseReels = Array.from({ length: 18 }, (_, i) => ({
       id: i,
-      video: `/reels/reel-${String(i + 1).padStart(3, "0")}.mp4`, // Uses 3 digits for 100+ files
+      video: `/reels/reel-${String(i + 1).padStart(2, "0")}.mp4`,
       views: `${(Math.random() * 10).toFixed(1)}M`,
     }));
     
     const savedOrder = localStorage.getItem("shuffledOrder");
     if (savedOrder) {
-      const orderIds = JSON.parse(savedOrder);
-      // Reconstruct order based on ID mapping
-      return orderIds.map(id => baseReels.find(r => r.id === id)).filter(Boolean);
+      const order = JSON.parse(savedOrder);
+      return order.map(id => baseReels.find(r => r.id === id));
     }
     
-    // Fisher-Yates Shuffle for a fresh experience
-    let shuffled = [...baseReels];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
+    // Simple Shuffle (Fisher-Yates)
+    const shuffled = [...baseReels].sort(() => Math.random() - 0.5);
     localStorage.setItem("shuffledOrder", JSON.stringify(shuffled.map(r => r.id)));
     return shuffled;
   });
 
-  const [activeReelIndex, setActiveReelIndex] = useState(() => {
-    const saved = localStorage.getItem("lastWatchedIndex");
-    const parsed = saved ? parseInt(saved) : 0;
-    return parsed < reels.length ? parsed : 0; // Guard against out-of-bounds
-  });
-
   const videoRefs = useRef([]);
   const reelsContainerRef = useRef(null);
-  const feedContainerRef = useRef(null);
 
+  // --- Save progress whenever index changes ---
   useEffect(() => {
     localStorage.setItem("lastWatchedIndex", activeReelIndex.toString());
   }, [activeReelIndex]);
@@ -58,16 +50,6 @@ export default function InstagramClone() {
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
   }, []);
-
-  // --- 2. BACK TO TOP LOGIC ---
-  const handleFeedScroll = (e) => {
-    // Show button if scrolled down more than 500px
-    setShowBackToTop(e.target.scrollTop > 500);
-  };
-
-  const scrollToTop = () => {
-    feedContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
-  };
 
   const openReelFromGrid = (index) => {
     setActiveReelIndex(index);
@@ -120,17 +102,13 @@ export default function InstagramClone() {
 
       {view === "feed" && (
         <div className="h-14 flex items-center justify-center border-b border-white/5 bg-black/60 backdrop-blur-lg sticky top-0 z-50">
-          <h1 className="text-xl font-bold italic tracking-tighter">Yoga's Instagram</h1>
+          <h1 className="text-xl font-bold italic tracking-tighter text-center w-full">Yoga's Instagram</h1>
         </div>
       )}
 
       <div className="flex-1 relative overflow-hidden">
         {view === "feed" && (
-          <div 
-            ref={feedContainerRef}
-            onScroll={handleFeedScroll}
-            className="h-full overflow-y-scroll no-scrollbar grid grid-cols-3 gap-[1px] pb-20"
-          >
+          <div className="h-full overflow-y-scroll no-scrollbar grid grid-cols-3 gap-[1px] pb-20">
             {reels.map((reel, index) => (
               <div 
                 key={reel.id} 
@@ -144,16 +122,6 @@ export default function InstagramClone() {
                 </div>
               </div>
             ))}
-            
-            {/* 3. Floating Back to Top Button */}
-            {showBackToTop && (
-              <button 
-                onClick={scrollToTop}
-                className="fixed bottom-20 right-4 p-3 bg-white text-black rounded-full shadow-lg z-50 active:scale-90 transition-transform"
-              >
-                <ArrowUp size={20} />
-              </button>
-            )}
           </div>
         )}
 
